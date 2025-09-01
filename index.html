@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ShadowMC — Join the Server</title>
+  <meta name="description" content="ShadowMC • Minecraft Network — Join now!" />
+  <link rel="icon" href="favicon.svg"/>
+  <style>
+    :root{
+      --bg:#0b0b0e;
+      --card:#121217;
+      --muted:#9da3ae;
+      --text:#fff;
+      --primary:#e11d48; /* red-600 */
+      --primary-2:#fb7185; /* rose-400 */
+      --glow: 0 0 25px rgba(225,29,72,.4),0 0 60px rgba(251,113,133,.25);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: radial-gradient(1200px 600px at 80% -10%, rgba(225,29,72,.20), transparent 60%),
+                  radial-gradient(900px 500px at -10% 10%, rgba(251,113,133,.09), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1100px;margin:0 auto;padding:24px}
+
+    /* nav */
+    nav{position:sticky;top:0;z-index:60;padding:10px 0;
+        backdrop-filter:saturate(140%) blur(8px);
+        background: linear-gradient(180deg, rgba(11,11,14,.88), rgba(11,11,14,.55));
+        border-bottom:1px solid rgba(255,255,255,.04)}
+    .nav-inner{display:flex;align-items:center;gap:16px;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.5px}
+    .brand .mark{width:46px;height:46px;border-radius:10px;
+      background: radial-gradient(120% 120% at 20% 20%, var(--primary), var(--primary-2));
+      box-shadow: var(--glow);
+      display:flex;align-items:center;justify-content:center;color:white;font-weight:900;font-size:24px;
+      border: 2px solid rgba(255,255,255,0.04)}
+    .brand span{font-size:18px}
+    .nav-links{display:flex;gap:18px}
+    .nav-links a{opacity:.85;padding:8px;border-radius:8px}
+    .nav-links a:hover{opacity:1;background:rgba(255,255,255,0.02)}
+
+    /* hero */
+    header{position:relative; isolation:isolate; overflow:hidden;padding-bottom:30px}
+    #particles{position:absolute; inset:0; z-index:-1}
+
+    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center;min-height:78vh;padding-top:24px}
+    @media(max-width:900px){.hero{grid-template-columns:1fr;min-height:unset;padding-top:12px}}
+
+    .headline{font-size: clamp(40px, 7vw, 64px);line-height:.95; font-weight:900; letter-spacing:-.02em;
+      background: linear-gradient(92deg, var(--primary) 0%, var(--primary-2) 60%);
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      filter: drop-shadow(0 14px 40px rgba(225,29,72,.28)); margin:0}
+    .subtitle{color:var(--muted);margin-top:12px;max-width:60ch}
+
+    .card{background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      border:1px solid rgba(255,255,255,.04);border-radius: var(--radius);
+      box-shadow: 0 20px 60px rgba(0,0,0,.45), var(--glow);padding:22px}
+
+    .status-row{display:flex;gap:10px;align-items:center;margin:8px 0 14px}
+    .dot{width:12px;height:12px;border-radius:999px;background: #9ca3af; box-shadow:0 0 0 8px rgba(156,163,175,.03)}
+    .status-label{color:var(--muted);font-weight:600}
+
+    .ip-box{display:flex;gap:10px;align-items:center; background:#0e0e13;border:1px solid rgba(255,255,255,.04);border-radius:14px;padding:10px 12px}
+    .ip{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace; font-weight:650}
+    .btn{cursor:pointer; padding:10px 14px;border-radius:12px; border:1px solid rgba(255,255,255,.06);
+      background: linear-gradient(180deg, rgba(225,29,72,.96), rgba(225,29,72,.82));box-shadow: var(--glow);font-weight:700}
+    .btn:active{transform:translateY(1px)}
+
+    .badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .badge{background:#0f0f13;border:1px solid rgba(255,255,255,.03);border-radius:999px;padding:8px 12px;color:#fff;opacity:.95;font-weight:600}
+
+    .wave{position:absolute; left:0; right:0; bottom:-1px; height:120px; pointer-events:none; opacity:.95}
+
+    section{padding:68px 0}
+    .section-title{font-size:28px;margin:0 0 18px 0}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+
+    .feature{position:relative;overflow:hidden}
+    .feature h3{margin:10px 0 8px}
+    .feature p{color:var(--muted)}
+
+    .shine{position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;
+      background:conic-gradient(from 0deg at 50% 50%, transparent 0 65%, rgba(251,113,133,.28) 80%, transparent 100%);
+      mask: radial-gradient(80% 80% at 50% 50%, black 0 70%, transparent 72% 100%);
+      animation: spin 6s linear infinite;opacity:.7}
+    @keyframes spin{to{transform: rotate(360deg)}}
+
+    footer{border-top:1px solid rgba(255,255,255,.04); color:var(--muted); padding:30px 0 50px}
+
+    .reveal{opacity:0; transform: translateY(10px); transition:.6s ease}
+    .reveal.show{opacity:1; transform:none}
+
+    /* small responsive tweaks */
+    @media(max-width:520px){
+      .brand .mark{width:38px;height:38px;font-size:18px}
+      .headline{font-size:36px}
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container nav-inner">
+      <a class="brand" href="#top">
+        <div class="mark" title="ShadowMC">S</div>
+        <span>ShadowMC</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#join">Join</a>
+        <a href="#rules">Rules</a>
+      </div>
+    </div>
+  </nav>
+
+  <header id="top">
+    <canvas id="particles"></canvas>
+    <div class="container hero">
+      <div>
+        <h1 class="headline">Welcome to ShadowMC</h1>
+        <p class="subtitle">A next‑level Minecraft experience. Fresh worlds, fair economy, and fast performance. Claim your land, build your empire, and battle together.</p>
+
+        <div class="card reveal">
+          <div class="status-row">
+            <span class="dot" id="status-dot"></span>
+            <span class="status-label" id="status-text">Status: checking…</span>
+          </div>
+          <div class="status-row">
+            <span class="status-label" id="players-text">Players: loading…</span>
+          </div>
+          <div class="ip-box">
+            <span class="ip" id="server-ip">panel.crxhost.com</span>
+            <button class="btn" id="copy-btn" aria-label="Copy IP">Copy IP</button>
+          </div>
+          <div class="badges">
+            <span class="badge">Java & Bedrock</span>
+            <span class="badge">No Pay‑to‑Win</span>
+            <span class="badge">Active Staff</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <h2 class="section-title" style="margin-top:0">Quick Join</h2>
+        <ol style="margin:0 0 18px 18px; padding:0; line-height:1.8">
+          <li>Open <b>Minecraft</b> (1.21+ recommended)</li>
+          <li>Go to <b>Multiplayer</b> → <b>Direct Connect</b></li>
+          <li>Paste IP → <b>Join Server</b></li>
+        </ol>
+        <a class="btn" href="#join">Go to Join Section ↓</a>
+      </div>
+    </div>
+    <svg class="wave" viewBox="0 0 1440 320" preserveAspectRatio="none"><path fill="rgba(225,29,72,.22)" d="M0,160L60,176C120,192,240,224,360,218.7C480,213,600,171,720,160C840,149,960,171,1080,170.7C1200,171,1320,149,1380,138.7L1440,128L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"/></svg>
+  </header>
+
+  <main>
+    <section id="features">
+      <div class="container">
+        <h2 class="section-title">Why play on ShadowMC?</h2>
+        <div class="grid">
+          <div class="feature card reveal">
+            <div class="shine"></div>
+            <h3>Lag‑Free Performance</h3>
+            <p>Optimized server with frequent backups and region‑based protection for smooth gameplay.</p>
+          </div>
+          <div class="feature card reveal">
+            <div class="shine"></div>
+            <h3>Balanced Economy</h3>
+            <p>Earn money through quests, shops, and auctions. No pay‑to‑win advantages—ever.</p>
+          </div>
+          <div class="feature card reveal">
+            <div class="shine"></div>
+            <h3>Community Events</h3>
+            <p>Weekly drops, seasonal leaderboards, and build contests with cosmetic rewards.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="join">
+      <div class="container">
+        <div class="card reveal" style="display:grid; gap:18px">
+          <h2 class="section-title" style="margin:0">Join ShadowMC Now</h2>
+          <div class="ip-box">
+            <span class="ip" id="server-ip-2">panel.crxhost.com</span>
+            <button class="btn" id="copy-btn-2">Copy IP</button>
+          </div>
+          <div style="display:flex; gap:12px; flex-wrap:wrap">
+            <a class="btn" href="#rules">Read Rules</a>
+            <a class="btn" href="#top">Back to Top</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="rules">
+      <div class="container">
+        <div class="card reveal">
+          <h2 class="section-title" style="margin-top:0">Rules</h2>
+          <ul style="margin:0 0 0 20px; line-height:1.9; color:var(--muted)">
+            <li>No hacking, exploits, or unfair mods.</li>
+            <li>Be respectful. No harassment or hate speech.</li>
+            <li>No griefing protected claims. Raiding unclaimed is allowed if your mode permits.</li>
+            <li>Keep chat clean. English or Arabic preferred.</li>
+            <li>Staff decisions are final. Appeals via Discord.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container" style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <div>© <span id="year"></span> ShadowMC Network</div>
+      <div>Made with ❤ by the ShadowMC Team</div>
+    </div>
+  </footer>
+
+  <script>
+    // Copy buttons
+    function copyIP(fromId, btnId){
+      const el = document.getElementById(fromId);
+      const btn = document.getElementById(btnId);
+      if(!el || !btn) return;
+      btn.addEventListener('click', async () => {
+        try{
+          await navigator.clipboard.writeText(el.textContent.trim());
+          const prev = btn.textContent; btn.textContent = 'Copied!';
+          setTimeout(()=>{btn.textContent = prev}, 1200);
+        }catch(err){ alert('Copy failed. Select and copy manually.'); }
+      });
+    }
+    copyIP('server-ip','copy-btn');
+    copyIP('server-ip-2','copy-btn-2');
+
+    // year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // reveal
+    const io = new IntersectionObserver((entries)=>{
+      for(const e of entries){ if(e.isIntersecting){ e.target.classList.add('show'); io.unobserve(e.target); } }
+    }, {threshold:.12});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+    // particles like original site (red orbs)
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let w, h, dpr, orbs;
+
+    function rand(min, max){ return Math.random()*(max-min)+min }
+
+    function resize(){
+      dpr = Math.max(1, Math.min(2, window.devicePixelRatio||1));
+      w = canvas.width = Math.floor(innerWidth * dpr);
+      h = canvas.height = Math.floor((innerHeight * 0.82) * dpr);
+      canvas.style.width = '100%'; canvas.style.height = '82vh';
+      const count = Math.max(36, Math.min(90, Math.floor(w/36)));
+      orbs = new Array(count).fill(0).map(()=>({
+        x: rand(0, w), y: rand(0, h), r: rand(4*dpr, 18*dpr),
+        vx: rand(-.12,.12)*dpr, vy: rand(-.06,.06)*dpr,
+        a: rand(.05,.28)
+      }));
+    }
+
+    function tick(){
+      ctx.clearRect(0,0,w,h);
+      for(const o of orbs){
+        o.x += o.vx; o.y += o.vy;
+        if(o.x < -50 || o.x > w+50) o.vx *= -1;
+        if(o.y < -50 || o.y > h+50) o.vy *= -1;
+        const g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r*6);
+        g.addColorStop(0, `rgba(225,29,72,${o.a})`);
+        g.addColorStop(1, 'rgba(225,29,72,0)');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(o.x, o.y, o.r*6, 0, Math.PI*2); ctx.fill();
+      }
+      requestAnimationFrame(tick);
+    }
+
+    window.addEventListener('resize', resize, {passive:true});
+    resize(); tick();
+
+    // ---- API FETCH for server status + players (mcsrvstat) ----
+    async function fetchServerStatus(){
+      try {
+        const res = await fetch("https://api.mcsrvstat.us/2/panel.crxhost.com");
+        const data = await res.json();
+        const dot = document.getElementById("status-dot");
+        const statusText = document.getElementById("status-text");
+        const playersText = document.getElementById("players-text");
+
+        if(data && data.online){
+          dot.style.background = "#22c55e";
+          dot.style.boxShadow = "0 0 0 8px rgba(34,197,94,.08)";
+          statusText.textContent = "Status: Online";
+          playersText.textContent = "Players: " + (data.players?.online || 0) + " / " + (data.players?.max || '?');
+        } else {
+          dot.style.background = "#ef4444";
+          dot.style.boxShadow = "0 0 0 8px rgba(239,68,68,.08)";
+          statusText.textContent = "Status: Offline";
+          playersText.textContent = "Players: 0";
+        }
+      } catch (e){
+        document.getElementById("status-text").textContent = "Status: Unknown";
+        document.getElementById("players-text").textContent = "Players: ?";
+      }
+    }
+    fetchServerStatus();
+    setInterval(fetchServerStatus, 15000);
+  </script>
+</body>
+</html>
